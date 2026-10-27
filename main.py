@@ -1,3 +1,5 @@
+from gc import disable
+
 import flet as ft
 from alert import AlertManager
 from deposito_strumenti import DepositoStrumenti
@@ -36,6 +38,15 @@ def main(page: ft.Page):
     lista_strumenti = ft.ListView(expand=True, spacing=5, padding=10, auto_scroll=True)
 
     # Tutti i TextField per le info necessarie per aggiungere un nuovo strumento (tipo, marca, anno, contatore posti)
+    input_tipo_strumento = ft.TextField(label = 'Tipo')
+    tipo = input_tipo_strumento.value
+    input_marca_strumento = ft.TextField(label = 'Marca')
+    marca = input_marca_strumento.value
+    input_anno_strumento = ft.TextField(label = 'anno')
+    input_anno = input_anno_strumento.value
+    contatore = ft.TextField(value = 0, width = 110, disabled = True)
+
+
     # TODO
 
     # --- FUNZIONI APP ---
@@ -55,6 +66,7 @@ def main(page: ft.Page):
         txt_responsabile.value = f"Responsabile: {deposito.get_responsabile()}"
 
     # Handlers per la gestione dei pulsanti utili all'inserimento di un nuovo strumento
+
     # TODO
 
     # --- EVENTI ---
@@ -62,6 +74,9 @@ def main(page: ft.Page):
     pulsante_conferma_responsabile = ft.Button("Conferma", on_click=conferma_responsabile)
 
     # Pulsanti per la gestione dell'inserimento di un nuovo strumento
+    pulsante_add = ft.IconButton(icon = ft.Icons.ADD, icon_color = 'green')
+    pulsante_minus = ft.IconButton(icon = ft.Icons.REMOVE, icon_color = 'red')
+
     # TODO
 
     # --- LAYOUT ---
@@ -78,9 +93,13 @@ def main(page: ft.Page):
         ft.Row(spacing=200,
                controls=[input_responsabile, pulsante_conferma_responsabile],
                alignment=ft.MainAxisAlignment.CENTER),
+        ft.Divider(),
 
         # Sezione 3
+        ft.Text("Aggiungi strumenti", size=20),
+        ft.Row(spacing = 30,controls=[input_tipo_strumento, input_marca_strumento, input_anno_strumento,pulsante_minus, contatore, pulsante_add],),
         # TODO
+
 
         # Sezione 4
         ft.Divider(),
