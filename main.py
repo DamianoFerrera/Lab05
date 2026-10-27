@@ -131,7 +131,7 @@ def main(page: ft.Page):
 
 
 
-        # Sezione 4
+        # Sezione 4 ,
         ft.Divider(),
         ft.Text("Strumenti", size=20),
         lista_strumenti,
