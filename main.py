@@ -1,6 +1,9 @@
 from gc import disable
 
 import flet as ft
+from flet import control, controls
+from flet.controls.core import list_view
+
 from alert import AlertManager
 from deposito_strumenti import DepositoStrumenti
 
@@ -39,11 +42,8 @@ def main(page: ft.Page):
 
     # Tutti i TextField per le info necessarie per aggiungere un nuovo strumento (tipo, marca, anno, contatore posti)
     input_tipo_strumento = ft.TextField(label = 'Tipo')
-    tipo = input_tipo_strumento.value
     input_marca_strumento = ft.TextField(label = 'Marca')
-    marca = input_marca_strumento.value
     input_anno_strumento = ft.TextField(label = 'anno')
-    input_anno = input_anno_strumento.value
     contatore = ft.TextField(value = 0, width = 110, disabled = True)
 
 
@@ -66,6 +66,33 @@ def main(page: ft.Page):
         txt_responsabile.value = f"Responsabile: {deposito.get_responsabile()}"
 
     # Handlers per la gestione dei pulsanti utili all'inserimento di un nuovo strumento
+    def handleAdd(e):
+        valore_attuale = contatore.value
+        contatore.value = valore_attuale + 1
+        contatore.update()
+
+    def handleRemove(e):
+        valore_attuale = contatore.value
+        contatore.value = valore_attuale - 1
+        contatore.update()
+
+    def handleAggiunta_strumenti(e):
+        tipo = input_tipo_strumento.value
+        marca = input_marca_strumento.value
+        try:
+            anno = int(input_anno_strumento.value)
+        except ValueError:
+            alert.show_alert("Errore: inserisci valori numerici per anno e posti")
+            return
+        deposito.aggiungi_strumento(tipo, marca, anno, contatore.value)
+        input_tipo_strumento.value = ''
+        input_marca_strumento.value = ''
+        input_anno_strumento.value = ''
+
+        aggiorna_lista_strumenti()
+
+
+
 
     # TODO
 
@@ -74,8 +101,9 @@ def main(page: ft.Page):
     pulsante_conferma_responsabile = ft.Button("Conferma", on_click=conferma_responsabile)
 
     # Pulsanti per la gestione dell'inserimento di un nuovo strumento
-    pulsante_add = ft.IconButton(icon = ft.Icons.ADD, icon_color = 'green')
-    pulsante_minus = ft.IconButton(icon = ft.Icons.REMOVE, icon_color = 'red')
+    pulsante_add = ft.IconButton(icon = ft.Icons.ADD, icon_color = 'green', on_click = handleAdd)
+    pulsante_Remove = ft.IconButton(icon = ft.Icons.REMOVE, icon_color = 'red', on_click = handleRemove)
+    pulsante_aggiungi_strumento = ft.Button( content = 'Aggiungi strumento', on_click= handleAggiunta_strumenti)
 
     # TODO
 
@@ -96,9 +124,11 @@ def main(page: ft.Page):
         ft.Divider(),
 
         # Sezione 3
-        ft.Text("Aggiungi strumenti", size=20),
-        ft.Row(spacing = 30,controls=[input_tipo_strumento, input_marca_strumento, input_anno_strumento,pulsante_minus, contatore, pulsante_add],),
+        ft.Text("Aggiungi nuovo strumento", size=20),
+        ft.Row(spacing = 30,controls=[input_tipo_strumento, input_marca_strumento, input_anno_strumento,pulsante_Remove, contatore, pulsante_add],),
+        ft.Row(controls = [pulsante_aggiungi_strumento], alignment=ft.MainAxisAlignment.CENTER),
         # TODO
+
 
 
         # Sezione 4
